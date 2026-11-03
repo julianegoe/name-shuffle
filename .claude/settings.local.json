@@ -11,7 +11,8 @@
       "Bash(echo \"tsc exit: $?\")",
       "Bash(./node_modules/.bin/vite build *)",
       "Bash(echo \"build exit: $?\")",
-      "Read(//Applications/Google Chrome.app/**)"
+      "Read(//Applications/Google Chrome.app/**)",
+      "Bash(pnpm add *)"
     ]
   }
 }
