@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm -v)",
+      "Bash(pnpm create *)",
+      "Bash(sed -i '' \"s#import vue from '@vitejs/plugin-vue'#import vue from '@vitejs/plugin-vue'\\\\nimport tailwindcss from '@tailwindcss/vite'#; s# vue\\(\\),# vue\\(\\),\\\\n tailwindcss\\(\\),#\" vite.config.ts)",
+      "Bash(pnpm build *)",
+      "WebFetch(domain:www.color-hex.com)",
+      "Bash(./node_modules/.bin/vue-tsc --build)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"tsc exit: $?\")",
+      "Bash(./node_modules/.bin/vite build *)",
+      "Bash(echo \"build exit: $?\")",
+      "Read(//Applications/Google Chrome.app/**)"
+    ]
+  }
+}

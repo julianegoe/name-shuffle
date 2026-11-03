@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&family=Google+Sans+Flex&family=Russo+One&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Google Sans Flex', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Russo One', ui-sans-serif, system-ui, sans-serif;
+  --font-slot: 'Bitcount Grid Double', ui-monospace, monospace;
+
+  --color-primary: #8f0000;
+  --color-on-primary: #e3d5c1;
+  --color-accent: #db5b00;
+  --color-muted: #8c8670;
+  --color-surface: #e3d5c1;
+  --color-on-surface: #000000;
+}
