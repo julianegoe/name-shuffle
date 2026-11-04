@@ -13,7 +13,7 @@ const emit = defineEmits<{
   spinStart: [];
 }>();
 
-const PLACEHOLDER = "———————";
+const PLACEHOLDER = "————";
 const MIN_STEPS = 30; // words the reel passes per spin, at least
 const DURATION_MS = 2500;
 const OVERSHOOT = 0.15; // how far past the word it bounces, in word heights

@@ -25,11 +25,12 @@
     }
   }
 
-  /* Each theme below sets these roles. */
+  /* Each theme below sets these roles. The two accents are never the text color,
+     so they always stand out: accent colors the first word, highlight the second. */
   --color-primary: var(--primary);
   --color-on-primary: var(--on-primary);
-  --color-accent: var(--accent); /* prefix word */
-  --color-highlight: var(--highlight); /* main word */
+  --color-accent: var(--accent);
+  --color-highlight: var(--highlight);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
   --color-on-surface: var(--on-surface);
@@ -66,7 +67,7 @@
   --primary: var(--twilight-indigo);
   --on-primary: var(--eggshell);
   --accent: var(--burnt-peach);
-  --highlight: var(--twilight-indigo);
+  --highlight: var(--muted-teal);
   --muted: var(--apricot-cream);
   --surface: var(--eggshell);
   --on-surface: var(--twilight-indigo);
@@ -77,7 +78,7 @@
   --on-primary: var(--twilight-indigo);
   --accent: var(--apricot-cream);
   --highlight: var(--burnt-peach);
-  --muted: var(--muted-teal);
+  --muted: color-mix(in oklab, var(--eggshell) 40%, var(--twilight-indigo));
   --surface: var(--twilight-indigo);
   --on-surface: var(--eggshell);
 }

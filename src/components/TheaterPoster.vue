@@ -38,7 +38,7 @@ defineProps<{
         class="stroke-surface" />
       <polygon
         points="332,132 337,150 355,155 337,160 332,178 327,160 309,155 327,150"
-        class="fill-muted" />
+        class="fill-highlight" />
 
       <!-- The lone figure in hat and coat -->
       <g class="fill-surface">

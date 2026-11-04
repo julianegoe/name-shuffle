@@ -77,6 +77,9 @@ export function useShuffledName() {
     if (chaos.value && first && second) return blendName(first, second);
     return second || first;
   });
+  const fullName = computed(() =>
+    [posterPrefix.value, posterMainWord.value].filter(Boolean).join(" "),
+  );
 
   return {
     prefix,
@@ -93,5 +96,6 @@ export function useShuffledName() {
     toggleConnector,
     posterPrefix,
     posterMainWord,
+    fullName,
   };
 }

@@ -6,7 +6,7 @@ const themeStore = useThemeStore();
 
 <template>
   <div
-    class="flex flex-wrap justify-center gap-3.5 text-xs text-on-primary"
+    class="flex flex-wrap justify-center gap-1.5 text-xs text-on-primary sm:gap-3.5"
     role="group"
     aria-label="Theme">
     <button

@@ -29,6 +29,8 @@ A shuffle machine that generates a name for our theater group. The group is sear
 
 - `src/App.vue` page layout: slim header (nav links, theme buttons) above the current view.
 - `src/views/Home.vue` root route: two reels, connector buttons, posters below.
+- `src/views/Favorites.vue` `/favorites` route: the saved names, with a button to remove each.
+- `src/stores/favorites.ts` favorite names, saved in localStorage. The heart button on the home page toggles the current name.
 - `src/composables/useShuffledName.ts` reel state, chaos mode, connectors, and the name the posters show.
 - `src/views/Admin.vue` `/admin` route: add words to either list.
 - `src/components/SlotReel.vue` one pill-shaped reel with its shuffle (die icon) button inside on the left and an on/off switch on the outline. Spin animation: fast, gradually slowing, slight bounce. Never lands on the word already shown. Respects reduced motion. Tuning constants are at the top of the file.
@@ -56,7 +58,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 ## Design
 
 - **Fonts** (Google Fonts import in `main.css`): Google Sans Flex (`font-sans`, body), Russo One (`font-heading`), Nunito bold (`font-slot`, the reel words).
-- **Themes:** pastel (default), eggshell, twilight (dark), curtain. Each theme sets the same role variables (`primary`, `on-primary`, `accent` for the prefix word, `highlight` for the main word, `muted`, `surface`, `on-surface`) from its palette colors. Components only use the role names as Tailwind colors, never raw hex. To add a theme: a block in `main.css` and an entry in `stores/theme.ts`.
+- **Themes:** pastel (default), eggshell, twilight (dark), curtain. Each theme sets the same role variables (`primary`, `on-primary`, `accent` for the prefix word, `highlight` for the main word, `muted`, `surface`, `on-surface`) from its palette colors. The two accents are never the text color, so they stand out; both are also used on the posters. In Curtain, `highlight` and `primary` are both oxblood, because the palette has no other strong color. Components only use the role names as Tailwind colors, never raw hex. To add a theme: a block in `main.css` and an entry in `stores/theme.ts`.
 - **Dotted shadow:** halftone dot pattern behind the reel pills (`dotted-shadow` utility). It reserves its own space with padding so it never overflows its container.
 - Posters use theme colors through the same role classes (`fill-surface`, `fill-accent`, ...).
 

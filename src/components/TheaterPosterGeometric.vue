@@ -22,13 +22,13 @@ defineProps<{
     <path d="M300 100 L400 0 V100 Z" class="fill-accent" />
 
     <path d="M0 200 A50 50 0 0 1 100 200 Z" class="fill-surface" />
-    <rect x="100" y="100" width="100" height="100" class="fill-accent" />
+    <rect x="100" y="100" width="100" height="100" class="fill-highlight" />
     <path d="M200 200 V100 A100 100 0 0 1 300 200 Z" class="fill-muted" />
     <circle cx="350" cy="150" r="50" class="fill-surface" />
 
     <path d="M0 200 H100 L0 300 Z" class="fill-muted" />
     <path d="M200 200 V300 A100 100 0 0 1 100 200 Z" class="fill-surface" />
-    <circle cx="250" cy="250" r="50" class="fill-accent" />
+    <circle cx="250" cy="250" r="50" class="fill-highlight" />
     <rect x="300" y="200" width="100" height="100" class="fill-muted" />
 
     <!-- Theater group: the star of the poster -->

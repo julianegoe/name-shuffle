@@ -38,7 +38,7 @@ const DEFAULTS: Record<WordList, string[]> = {
     "Resonanzwerk",
     "Frequemble",
     "Neue Resonanz",
-    "Team Theatrale",
+    "Theatrale",
     "Neue Frequenz",
     "Resonanzbereit",
     "Ping Pong",
@@ -46,19 +46,18 @@ const DEFAULTS: Record<WordList, string[]> = {
     "Kloppraum",
     "Resonanzzirkel",
     "Konfrontativ",
-    "Unangenehmt",
+    "Unangenehm",
     "Diskurs",
     "Konfrontation",
     "Konfrontare",
     "Die Konfrontäre",
     "Die Resonäre",
     "Resonanzberg",
-    "Stets bemüht",
+    "bemüht",
     "Systemresonant",
-    "Überwiegend Vibelig",
+    "vibelig",
     "laut",
     "spielfreuig",
-    "resonanzbereit",
     "resonanzfähig",
     "weiblich",
   ],
@@ -117,5 +116,10 @@ export const useWordsStore = defineStore("words", () => {
     }
   }
 
-  return { prefixes, mainWords, addWord, removeWord };
+  // Base words come back after a reload, words added by the user don't.
+  function isUserWord(list: WordList, word: string): boolean {
+    return !DEFAULTS[list].includes(word);
+  }
+
+  return { prefixes, mainWords, addWord, removeWord, isUserWord };
 });

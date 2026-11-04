@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
 import ConnectorButton from "@/components/ConnectorButton.vue";
 import CrossButton from "@/components/CrossButton.vue";
@@ -9,6 +9,7 @@ import SlotReel from "@/components/SlotReel.vue";
 import TheaterPoster from "@/components/TheaterPoster.vue";
 import TheaterPosterGeometric from "@/components/TheaterPosterGeometric.vue";
 import { CONNECTORS, useShuffledName } from "@/composables/useShuffledName";
+import { useFavoritesStore } from "@/stores/favorites";
 
 const POSTERS = [
   { component: TheaterPoster, rotation: "-rotate-2", hint: "" },
@@ -34,7 +35,11 @@ const {
   toggleConnector,
   posterPrefix,
   posterMainWord,
+  fullName,
 } = useShuffledName();
+
+const favorites = useFavoritesStore();
+const isFavorite = computed(() => favorites.names.includes(fullName.value));
 
 const posterHintDismissed = ref(false); // not saved, so the hint is back after a reload
 
@@ -80,7 +85,7 @@ watch([posterPrefix, posterMainWord], () => {
           v-model:enabled="prefixEnabled"
           :words="reelPrefixes"
           :locked="!mainWordEnabled"
-          name="Prefix"
+          name="Erstes Wort"
           word-class="text-accent"
           @spin-start="cancelNudge" />
       </div>
@@ -105,10 +110,20 @@ watch([posterPrefix, posterMainWord], () => {
         v-model:enabled="mainWordEnabled"
         :words="reelMainWords"
         :locked="!prefixEnabled"
-        name="Name"
+        name="Zweites Wort"
         word-class="text-highlight"
         @spin-start="cancelNudge" />
     </div>
+    <!-- Always takes up its space, so nothing jumps when a name is ready -->
+    <button
+      type="button"
+      class="flex cursor-pointer items-center gap-2 rounded-full bg-primary px-4 py-2 font-bold text-on-primary transition duration-300 ease-spring hover:scale-105 active:scale-95"
+      :class="{ invisible: !hasName }"
+      :aria-pressed="isFavorite"
+      @click="favorites.toggle(fullName)">
+      ⭐️
+      {{ isFavorite ? "Gemerkt" : "Merken" }}
+    </button>
     <div class="flex flex-wrap items-end justify-center gap-8">
       <div v-for="poster in POSTERS" :key="poster.rotation" class="relative">
         <!-- Above the poster on small screens, beside it where there is room -->
