@@ -13,7 +13,7 @@ const ONSETS = [
   'bl', 'br', 'ch', 'ck', 'dr', 'fl', 'fr', 'gl', 'gr', 'kl', 'kn', 'kr',
   'ph', 'pf', 'pl', 'pr', 'qu', 'sp', 'th', 'tr',
 ]
-const VOWELS = 'aeiouyäöü'
+export const VOWELS = 'aeiouyäöü'
 
 // Small words that can't carry a name on their own
 const STOP_WORDS = new Set(['am', 'auf', 'das', 'der', 'die', 'und'])
@@ -74,15 +74,19 @@ function mergeShortSyllables(syllables: string[]): string[] {
   return chunks
 }
 
-function capitalize(word: string): string {
+export function capitalize(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
-function partsOf(entry: string): string[] {
+function wordsOf(entry: string): string[] {
   return entry
     .trim()
     .split(/\s+/)
     .filter((word) => word !== '' && !STOP_WORDS.has(word.toLowerCase()))
+}
+
+function partsOf(entry: string): string[] {
+  return wordsOf(entry)
     .flatMap((word) => mergeShortSyllables(splitSyllables(word)))
     .map(capitalize)
 }
@@ -90,10 +94,7 @@ function partsOf(entry: string): string[] {
 // The start of a word, cut as soon as it's long enough: "Theater" -> Thea.
 // Unlike partsOf, nothing leftover joins it, which keeps it short for blending.
 function openingOf(entry: string): string {
-  const word = entry
-    .trim()
-    .split(/\s+/)
-    .find((item) => item !== '' && !STOP_WORDS.has(item.toLowerCase()))
+  const word = wordsOf(entry)[0]
   if (word === undefined) return ''
 
   let opening = ''

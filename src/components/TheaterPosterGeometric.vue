@@ -1,22 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { fitMainWord, fitPrefix, soloWordLayout } from "@/utils/posterWord";
+import PosterName from "@/components/PosterName.vue";
 
-const props = defineProps<{
+defineProps<{
   prefix: string;
   mainWord: string;
 }>();
-
-// Without a prefix the word stands alone and gets huge.
-const solo = computed(() => props.prefix === "");
-const soloLayout = computed(() => soloWordLayout(props.mainWord));
-// The solo word sits centered between the tiles and the play line.
-const soloFirstBaseline = computed(
-  () => 407 - soloLayout.value.height / 2 + soloLayout.value.capHeight,
-);
-
-const prefixSize = computed(() => fitPrefix(props.prefix, 64));
-const mainWordSize = computed(() => fitMainWord(props.mainWord, 96));
 </script>
 
 <template>
@@ -45,40 +33,16 @@ const mainWordSize = computed(() => fitMainWord(props.mainWord, 96));
 
     <!-- Theater group: the star of the poster -->
     <g class="fill-surface">
-      <template v-if="solo">
-        <text
-          v-for="(line, index) in soloLayout.lines"
-          :key="index"
-          x="28"
-          :y="soloFirstBaseline + index * soloLayout.lineStep"
-          :font-size="soloLayout.fontSize"
-          :textLength="soloLayout.textWidth"
-          lengthAdjust="spacingAndGlyphs"
-          stroke-width="3"
-          stroke-linejoin="round"
-          class="stroke-surface font-heading">
-          {{ line }}
-        </text>
-      </template>
-      <template v-else>
-        <text
-          x="28"
-          y="372"
-          :font-size="prefixSize"
-          font-weight="900"
-          class="font-heading">
-          {{ prefix }}
-        </text>
-        <text
-          x="28"
-          y="470"
-          :font-size="mainWordSize"
-          stroke-width="1.5"
-          stroke-linejoin="round"
-          class="stroke-surface font-heading">
-          {{ mainWord }}
-        </text>
-      </template>
+      <PosterName
+        :prefix="prefix"
+        :main-word="mainWord"
+        :x="28"
+        :prefix-y="372"
+        :main-word-y="470"
+        :prefix-max="64"
+        :main-word-max="96"
+        :solo-y="407"
+        solo-centered />
       <text
         x="28"
         y="530"

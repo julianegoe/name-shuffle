@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
 import ConnectorButton from "@/components/ConnectorButton.vue";
-import FlipCard from "@/components/FlipCard.vue";
+import CrossButton from "@/components/CrossButton.vue";
 import HintArrow from "@/components/HintArrow.vue";
-import InstagramPostMock from "@/components/InstagramPostMock.vue";
+import PosterCard from "@/components/PosterCard.vue";
 import SlotReel from "@/components/SlotReel.vue";
 import TheaterPoster from "@/components/TheaterPoster.vue";
 import TheaterPosterGeometric from "@/components/TheaterPosterGeometric.vue";
-import { useWordsStore } from "@/stores/words";
-import { bestPartners, blendName } from "@/utils/neologism";
-import { allParts, firstParts } from "@/utils/wordParts";
+import { CONNECTORS, useShuffledName } from "@/composables/useShuffledName";
 
 const POSTERS = [
   { component: TheaterPoster, rotation: "-rotate-2", hint: "" },
@@ -20,80 +18,25 @@ const POSTERS = [
     hint: "Unser neuer Name",
   },
 ];
-const POSTER_CLASS =
-  "absolute inset-0 size-full origin-bottom transition duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-103 motion-reduce:transition-none";
-const POSTER_HIDDEN_CLASS = "invisible translate-y-8 scale-75 opacity-0";
 
-const words = useWordsStore();
+const {
+  prefix,
+  mainWord,
+  prefixEnabled,
+  mainWordEnabled,
+  hasName,
+  chaos,
+  reelPrefixes,
+  reelMainWords,
+  toggleChaos,
+  connector,
+  connectorsAvailable,
+  toggleConnector,
+  posterPrefix,
+  posterMainWord,
+} = useShuffledName();
+
 const posterHintDismissed = ref(false); // not saved, so the hint is back after a reload
-
-const prefix = ref("");
-const mainWord = ref("");
-const prefixEnabled = ref(true);
-const mainWordEnabled = ref(true);
-const bothEnabled = computed(
-  () => prefixEnabled.value && mainWordEnabled.value,
-);
-// A connector word goes between the two words on the posters. Only one at a time.
-const CONNECTORS = ["und", "aber"] as const;
-const connector = ref<(typeof CONNECTORS)[number] | "">("");
-
-const hasName = computed(
-  () =>
-    (!prefixEnabled.value || prefix.value !== "") &&
-    (!mainWordEnabled.value || mainWord.value !== ""),
-);
-
-// Chaos mode: the reels shuffle word parts, and the two parts form one new word.
-// The first reel takes the first part of each entry, the second reel any part.
-const chaos = ref(false);
-const takenNames = computed(
-  () =>
-    new Set(
-      [...words.prefixes, ...words.mainWords].flatMap((entry) =>
-        entry.toLowerCase().split(/\s+/),
-      ),
-    ),
-);
-// Once one reel has landed, the other only offers pieces that sound good with it.
-const reelPrefixes = computed(() => {
-  if (!chaos.value) return words.prefixes;
-  const pieces = firstParts(words.prefixes);
-  return mainWord.value && mainWordEnabled.value
-    ? bestPartners(mainWord.value, pieces, false, takenNames.value)
-    : pieces;
-});
-const reelMainWords = computed(() => {
-  if (!chaos.value) return words.mainWords;
-  const pieces = allParts(words.mainWords);
-  return prefix.value && prefixEnabled.value
-    ? bestPartners(prefix.value, pieces, true, takenNames.value)
-    : pieces;
-});
-const chaosName = computed(() => {
-  const first = prefixEnabled.value ? prefix.value : "";
-  const second = mainWordEnabled.value ? mainWord.value : "";
-  return first && second ? blendName(first, second) : first || second;
-});
-
-function toggleChaos() {
-  chaos.value = !chaos.value;
-  // Whole entries and parts don't mix, so both modes start empty
-  prefix.value = "";
-  mainWord.value = "";
-}
-
-// With one reel switched off, the remaining word takes the main spot on the posters.
-const posterPrefix = computed(() => {
-  if (chaos.value || !bothEnabled.value) return "";
-  return connector.value && prefix.value
-    ? `${prefix.value} ${connector.value}`
-    : prefix.value;
-});
-const posterMainWord = computed(() => {
-  if (chaos.value) return chaosName.value;
-  return mainWordEnabled.value ? mainWord.value : prefix.value;
-});
 
 // If nobody clicks a poster soon after a new name, the posters shake once as a hint.
 const NUDGE_DELAY_MS = 3000;
@@ -118,9 +61,9 @@ watch([posterPrefix, posterMainWord], () => {
 </script>
 
 <template>
-  <main class="grid grid-rows-[1fr_auto] gap-6 p-6">
+  <main class="flex flex-col items-center gap-6 p-6">
     <div
-      class="relative grid w-full max-w-6xl gap-y-3 self-center justify-self-center pt-20 md:grid-cols-2 md:gap-x-10">
+      class="relative my-auto grid w-full max-w-6xl gap-y-3 pt-20 md:grid-cols-2 md:gap-x-10">
       <div class="relative">
         <!-- Shown until the first shuffle -->
         <div
@@ -148,9 +91,9 @@ watch([posterPrefix, posterMainWord], () => {
           v-for="word in CONNECTORS"
           :key="word"
           :label="word"
-          :active="connector === word && bothEnabled && !chaos"
-          :disabled="!bothEnabled || chaos"
-          @click="connector = connector === word ? '' : word" />
+          :active="connector === word && connectorsAvailable"
+          :disabled="!connectorsAvailable"
+          @click="toggleConnector(word)" />
         <ConnectorButton
           label="😈 Chaos"
           :active="chaos"
@@ -166,9 +109,7 @@ watch([posterPrefix, posterMainWord], () => {
         word-class="text-highlight"
         @spin-start="cancelNudge" />
     </div>
-    <!-- Empty boxes hold the posters' space until there is a name, so nothing jumps -->
-    <div
-      class="flex flex-wrap items-end justify-center gap-8 justify-self-center">
+    <div class="flex flex-wrap items-end justify-center gap-8">
       <div v-for="poster in POSTERS" :key="poster.rotation" class="relative">
         <!-- Above the poster on small screens, beside it where there is room -->
         <div
@@ -179,66 +120,22 @@ watch([posterPrefix, posterMainWord], () => {
               class="-rotate-3 text-center font-slot text-2xl leading-tight font-bold md:text-3xl xl:text-left xl:text-2xl">
               {{ poster.hint }}
             </span>
-            <button
-              type="button"
-              class="grid size-6 shrink-0 cursor-pointer place-items-center rounded-full border-2 border-on-surface"
-              aria-label="Hinweis schließen"
-              title="Hinweis schließen"
-              @click="posterHintDismissed = true">
-              <svg
-                class="size-3"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                aria-hidden="true">
-                <path d="M2 2l8 8M10 2l-8 8" />
-              </svg>
-            </button>
+            <CrossButton
+              class="size-6"
+              label="Hinweis schließen"
+              @click="posterHintDismissed = true" />
           </div>
           <HintArrow class="w-12 shrink-0 xl:rotate-90" />
         </div>
-        <div class="relative aspect-[400/566] w-56 md:w-80">
-          <div
-            v-if="!hasName"
-            class="absolute inset-0 origin-bottom border-2 border-dashed border-on-surface/30"
-            :class="poster.rotation"></div>
-          <!-- Click a poster to flip it: its back shows it as an Instagram post -->
-          <FlipCard
-            :class="[
-              POSTER_CLASS,
-              poster.rotation,
-              {
-                [POSTER_HIDDEN_CLASS]: !hasName,
-                'motion-safe:animate-shake': shaking,
-              },
-            ]"
-            @click="cancelNudge"
-            @animationend="shaking = false">
-            <template #front>
-              <component
-                :is="poster.component"
-                class="size-full shadow-xl"
-                :prefix="posterPrefix"
-                :main-word="posterMainWord" />
-            </template>
-            <template #back>
-              <InstagramPostMock
-                class="size-full drop-shadow-xl"
-                :prefix="posterPrefix"
-                :main-word="posterMainWord">
-                <template #default="box">
-                  <component
-                    :is="poster.component"
-                    v-bind="box"
-                    :prefix="posterPrefix"
-                    :main-word="posterMainWord" />
-                </template>
-              </InstagramPostMock>
-            </template>
-          </FlipCard>
-        </div>
+        <PosterCard
+          :poster="poster.component"
+          :rotation="poster.rotation"
+          :prefix="posterPrefix"
+          :main-word="posterMainWord"
+          :visible="hasName"
+          :shaking="shaking"
+          @flip="cancelNudge"
+          @shake-end="shaking = false" />
       </div>
     </div>
   </main>

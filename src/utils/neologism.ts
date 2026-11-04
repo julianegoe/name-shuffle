@@ -1,6 +1,7 @@
 // Makes new words out of two pieces and rates how good they sound.
 
-const VOWELS = 'aeiouyäöü'
+import { capitalize, VOWELS } from '@/utils/wordParts'
+
 // Endings that sound like a name or a concept: "Konfrontanz", "Ensemtik"
 const STRONG_ENDINGS = ['anz', 'enz', 'ik', 'ix', 'ax', 'um', 'ale', 'ore', 'ion', 'ant', 'ent', 'ude', 'era', 'ika', 'ur', 'all']
 
@@ -16,8 +17,7 @@ function isVowel(letter: string): boolean {
 export function blendName(first: string, second: string): string {
   const start = first.toLowerCase()
   const end = second.toLowerCase()
-  const name = start.slice(0, joinPoint(start, end)) + end
-  return name.charAt(0).toUpperCase() + name.slice(1)
+  return capitalize(start.slice(0, joinPoint(start, end)) + end)
 }
 
 // How much of `start` to keep in front of `end`
@@ -34,16 +34,11 @@ function joinPoint(start: string, end: string): number {
 }
 
 function longestConsonantRun(word: string): number {
-  let longest = 0
-  let run = 0
-  for (const letter of word.toLowerCase()) {
-    run = isVowel(letter) ? 0 : run + 1
-    longest = Math.max(longest, run)
-  }
-  return longest
+  const runs = word.split(new RegExp(`[${VOWELS}]+`))
+  return Math.max(...runs.map((run) => run.length))
 }
 
-export function scoreName(name: string): number {
+function scoreName(name: string): number {
   const lower = name.toLowerCase()
   let score = 0
 

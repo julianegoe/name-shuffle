@@ -7,6 +7,7 @@ const themeStore = useThemeStore();
 <template>
   <div
     class="flex flex-wrap justify-center gap-3.5 text-xs text-on-primary"
+    role="group"
     aria-label="Theme">
     <button
       v-for="theme in THEMES"

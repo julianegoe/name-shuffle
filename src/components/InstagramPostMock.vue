@@ -33,24 +33,22 @@ const ICONS = {
   profile: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6.5 18.5c1-2.5 3-3.5 5.5-3.5s4.5 1 5.5 3.5',
 }
 
-const TOP_ICONS = [
+const PLACED_ICONS = [
+  // App bar
   { d: ICONS.heart, x: 328, y: 34 },
   { d: ICONS.comment, x: 364, y: 34 },
-]
-const ACTION_ICONS = [
+  // Post actions
   { d: ICONS.heart, x: 16, y: 626 },
   { d: ICONS.comment, x: 56, y: 626 },
   { d: ICONS.send, x: 96, y: 626 },
   { d: ICONS.bookmark, x: 360, y: 626 },
-]
-const NAV_ICONS = [
+  // Tab bar
   { d: ICONS.home, x: 36, y: 728 },
   { d: ICONS.search, x: 112, y: 728 },
   { d: ICONS.add, x: 188, y: 728 },
   { d: ICONS.video, x: 264, y: 728 },
   { d: ICONS.profile, x: 340, y: 728 },
 ]
-const ALL_ICONS = [...TOP_ICONS, ...ACTION_ICONS, ...NAV_ICONS]
 </script>
 
 <template>
@@ -105,7 +103,7 @@ const ALL_ICONS = [...TOP_ICONS, ...ACTION_ICONS, ...NAV_ICONS]
     <!-- All icons -->
     <g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="stroke-black">
       <path
-        v-for="icon in ALL_ICONS"
+        v-for="icon in PLACED_ICONS"
         :key="`${icon.x}-${icon.y}`"
         :d="icon.d"
         :transform="`translate(${icon.x} ${icon.y})`"

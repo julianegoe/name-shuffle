@@ -7,7 +7,7 @@ const flipped = ref(false)
 <template>
   <button
     type="button"
-    class="block cursor-pointer perspective-[1400px]"
+    class="block cursor-pointer perspective-distant"
     :aria-label="flipped ? 'Zurück zum Plakat' : 'Plakat umdrehen'"
     :aria-pressed="flipped"
     @click="flipped = !flipped"

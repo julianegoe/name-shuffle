@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <button
     type="button"
-    class="flex cursor-pointer justify-center rounded-full border-2 border-on-surface bg-accent font-slot text-lg px-3 py-1.5 font-bold text-on-surface uppercase transition duration-300 ease-[cubic-bezier(0.34,1.8,0.64,1)] hover:scale-110 active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:hover:scale-100"
+    class="flex cursor-pointer justify-center rounded-full border-2 border-on-surface bg-accent font-slot text-lg px-3 py-1.5 font-bold text-on-surface uppercase transition duration-300 ease-spring hover:scale-110 active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:hover:scale-100"
     :class="active ? 'shadow-md' : 'opacity-50'"
     :aria-pressed="active">
     {{ label }}

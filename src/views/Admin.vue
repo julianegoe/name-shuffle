@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
+import CrossButton from '@/components/CrossButton.vue'
 import { useWordsStore, type WordList } from '@/stores/words'
 
 const words = useWordsStore()
@@ -45,25 +46,11 @@ function save(list: WordList) {
         <p v-if="errors[list.id]" role="alert" class="text-sm">{{ errors[list.id] }}</p>
         <ul class="grid gap-x-4 gap-y-1" :class="{ 'grid-cols-2': list.id === 'mainWords' }">
           <li v-for="word in words[list.id]" :key="word" class="flex items-center gap-2">
-            <button
-              type="button"
-              class="grid size-5 shrink-0 cursor-pointer place-items-center rounded-full border border-on-surface hover:bg-on-surface hover:text-surface"
-              :aria-label="`${word} löschen`"
-              :title="`${word} löschen`"
+            <CrossButton
+              class="size-5 hover:bg-on-surface hover:text-surface"
+              :label="`${word} löschen`"
               @click="words.removeWord(list.id, word)"
-            >
-              <svg
-                class="size-2.5"
-                viewBox="0 0 10 10"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                aria-hidden="true"
-              >
-                <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" />
-              </svg>
-            </button>
+            />
             {{ word }}
           </li>
         </ul>

@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { fitMainWord, fitPrefix, soloWordLayout } from "@/utils/posterWord";
+import PosterName from "@/components/PosterName.vue";
 
-const props = defineProps<{
+defineProps<{
   prefix: string;
   mainWord: string;
 }>();
-
-// Without a prefix the word stands alone and gets huge, so the illustration makes room.
-const solo = computed(() => props.prefix === "");
-const soloLayout = computed(() => soloWordLayout(props.mainWord));
-
-const prefixSize = computed(() => fitPrefix(props.prefix, 60));
-const mainWordSize = computed(() => fitMainWord(props.mainWord, 84));
 </script>
 
 <template>
@@ -22,7 +14,9 @@ const mainWordSize = computed(() => fitMainWord(props.mainWord, 84));
     :aria-label="`Theaterplakat: ${prefix} ${mainWord} spielt Die Gerechten von Albert Camus`">
     <rect width="400" height="566" class="fill-on-surface" />
 
-    <g :transform="solo ? 'translate(50 -35) scale(0.7)' : 'translate(0 -60)'">
+    <g :transform="
+        prefix === '' ? 'translate(50 -35) scale(0.7)' : 'translate(0 -60)'
+      ">
       <!-- Ground wedge, starting past the poster's left edge -->
       <polygon points="-100,361 190,445 -100,559" class="fill-muted" />
 
@@ -72,40 +66,15 @@ const mainWordSize = computed(() => fitMainWord(props.mainWord, 84));
 
     <!-- Theater group: the star of the poster -->
     <g text-anchor="end" class="fill-surface">
-      <template v-if="solo">
-        <text
-          v-for="(line, index) in soloLayout.lines"
-          :key="index"
-          x="372"
-          :y="540 - (soloLayout.lines.length - 1 - index) * soloLayout.lineStep"
-          :font-size="soloLayout.fontSize"
-          :textLength="soloLayout.textWidth"
-          lengthAdjust="spacingAndGlyphs"
-          stroke-width="3"
-          stroke-linejoin="round"
-          class="stroke-surface font-heading">
-          {{ line }}
-        </text>
-      </template>
-      <template v-else>
-        <text
-          x="372"
-          y="462"
-          :font-size="prefixSize"
-          font-weight="900"
-          class="font-heading">
-          {{ prefix }}
-        </text>
-        <text
-          x="372"
-          y="540"
-          :font-size="mainWordSize"
-          stroke-width="1.5"
-          stroke-linejoin="round"
-          class="stroke-surface font-heading">
-          {{ mainWord }}
-        </text>
-      </template>
+      <PosterName
+        :prefix="prefix"
+        :main-word="mainWord"
+        :x="372"
+        :prefix-y="462"
+        :main-word-y="540"
+        :prefix-max="60"
+        :main-word-max="84"
+        :solo-y="540" />
     </g>
   </svg>
 </template>

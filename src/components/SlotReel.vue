@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef } from "vue";
+import CrossButton from "@/components/CrossButton.vue";
 
 const props = defineProps<{
   words: string[];
@@ -84,12 +85,12 @@ async function spin() {
       class="dotted-shadow rounded-full transition-opacity"
       :class="{ 'opacity-30': !enabled }">
       <div
-        class="relative h-(--reel-item) overflow-hidden rounded-full border-4 border-on-surface bg-surface text-[clamp(1.75rem,9vw,2.5rem)] [--reel-item:calc(1.2em+3.5rem)] md:text-[clamp(2rem,4vw,3.5rem)]">
+        class="relative box-content h-24 overflow-hidden rounded-full border-4 border-on-surface bg-surface text-4xl md:h-28 lg:text-5xl">
         <div ref="strip" aria-hidden="true">
           <div
             v-for="(item, index) in reel"
             :key="index"
-            class="@container flex h-(--reel-item) items-center justify-center pr-4 pl-18 font-slot md:pr-8 md:pl-22 leading-none font-bold whitespace-nowrap"
+            class="@container flex h-24 items-center justify-center pr-4 pl-18 font-slot leading-none font-bold whitespace-nowrap md:h-28 md:pr-8 md:pl-22"
             :class="wordClass">
             <!-- Long words shrink to fit: width available / estimated width of the word in em -->
             <span
@@ -108,7 +109,7 @@ async function spin() {
           @click="spin">
           <!-- A tilted die: wobbles on hover, tumbles while the reel spins -->
           <svg
-            class="size-8 -rotate-12 transition-transform duration-300 ease-[cubic-bezier(0.34,1.8,0.64,1)] group-hover:rotate-12 group-active:scale-90"
+            class="size-8 -rotate-12 transition-transform duration-300 ease-spring group-hover:rotate-12 group-active:scale-90"
             :class="{ 'animate-spin': spinning }"
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -132,27 +133,14 @@ async function spin() {
       </div>
     </div>
     <!-- On/off switch, sits on the pill's outline -->
-    <button
-      type="button"
-      class="absolute -top-2 right-8 grid size-8 cursor-pointer place-items-center rounded-full border-2 border-on-surface bg-surface text-on-surface transition-opacity disabled:cursor-default disabled:border-on-surface/30 disabled:text-on-surface/30 md:right-10"
+    <CrossButton
+      class="absolute -top-2 right-8 size-8 bg-surface text-on-surface transition-opacity disabled:cursor-default disabled:border-on-surface/30 disabled:text-on-surface/30 md:right-10"
       :class="{ 'pointer-events-none opacity-0': spinning }"
-      :aria-label="`${name} ${enabled ? 'ausschalten' : 'einschalten'}`"
-      :title="`${name} ${enabled ? 'ausschalten' : 'einschalten'}`"
+      :label="`${name} ${enabled ? 'ausschalten' : 'einschalten'}`"
+      :plus="!enabled"
       :aria-pressed="enabled"
       :disabled="spinning || (enabled && locked)"
-      @click="enabled = !enabled">
-      <svg
-        class="size-4 transition-transform"
-        :class="{ 'rotate-45': enabled }"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="3"
-        stroke-linecap="round"
-        aria-hidden="true">
-        <path d="M8 2v12M2 8h12" />
-      </svg>
-    </button>
+      @click="enabled = !enabled" />
     <output v-if="enabled" class="sr-only">{{ word }}</output>
   </div>
 </template>

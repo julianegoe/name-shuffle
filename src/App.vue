@@ -3,31 +3,31 @@ import { RouterLink, RouterView } from "vue-router";
 import DebugPanel from "@/components/DebugPanel.vue";
 
 const showDebugPanel = import.meta.env.DEV;
+const NAV_LINKS = [
+  { to: "/", label: "Name Shuffle" },
+  { to: "/admin", label: "Wörter hinzufügen" },
+];
 </script>
 
 <template>
-  <div class="grid min-h-dvh grid-rows-[auto_1fr] bg-surface text-on-surface">
+  <div class="flex min-h-dvh flex-col bg-surface text-on-surface">
     <header
-      class="flex items-center gap-2 bg-primary px-4 py-2 text-center text-on-primary justify-between">
-      <nav class="flex gap-4 items-center text-sm md:justify-self-start">
+      class="flex items-center justify-between gap-2 bg-primary px-4 py-2 text-center text-on-primary">
+      <nav class="flex items-center gap-4 text-sm">
         <RouterLink
-          class="rounded-full px-3 py-1 border border-on-primary"
-          active-class="bg-on-primary text-on-surface border-on-primary"
-          to="/"
-          >Name Shuffle</RouterLink
-        >
-        <RouterLink
-          to="/admin"
-          class="rounded-full px-3 py-1 border border-on-primary"
-          active-class="bg-on-primary text-on-surface border-on-primary"
-          >Wörter hinzufügen</RouterLink
-        >
+          v-for="link in NAV_LINKS"
+          :key="link.to"
+          :to="link.to"
+          class="rounded-full border border-on-primary px-3 py-1"
+          active-class="bg-on-primary text-on-surface">
+          {{ link.label }}
+        </RouterLink>
       </nav>
-      <div class="flex gap-4 items-center">
+      <div v-if="showDebugPanel" class="flex items-center gap-4">
         <span class="text-sm">Theme:</span>
-        <DebugPanel v-if="showDebugPanel" class="md:justify-end" />
+        <DebugPanel class="md:justify-end" />
       </div>
     </header>
-    <RouterView />
+    <RouterView class="grow" />
   </div>
 </template>

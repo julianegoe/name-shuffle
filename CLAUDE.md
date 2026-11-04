@@ -27,13 +27,17 @@ A shuffle machine that generates a name for our theater group. The group is sear
 
 ## Structure
 
-- `src/App.vue` page layout: slim header (Admin link, title linking home, theme buttons) above the current view.
-- `src/views/Home.vue` root route: two reels, posters below. A grid layout.
+- `src/App.vue` page layout: slim header (nav links, theme buttons) above the current view.
+- `src/views/Home.vue` root route: two reels, connector buttons, posters below.
+- `src/composables/useShuffledName.ts` reel state, chaos mode, connectors, and the name the posters show.
 - `src/views/Admin.vue` `/admin` route: add words to either list.
 - `src/components/SlotReel.vue` one pill-shaped reel with its shuffle (die icon) button inside on the left and an on/off switch on the outline. Spin animation: fast, gradually slowing, slight bounce. Never lands on the word already shown. Respects reduced motion. Tuning constants are at the top of the file.
 - `src/components/TheaterPoster.vue` illustrated poster for "Die Gerechten" by Albert Camus (figure and bomb), group name prominent at the bottom right, play title small.
 - `src/components/TheaterPosterGeometric.vue` second poster: geometric tiles, the group name is the star, play only as a small line.
 - `src/components/ConnectorButton.vue` round accent toggle ball with a word in it ("und", "aber"). One connector at a time goes between the two words on the posters.
+- `src/components/CrossButton.vue` round × / + button, sized with a size class.
+- `src/components/PosterCard.vue` a poster with its empty box, pop-in, shake and flip to the Instagram post.
+- `src/components/PosterName.vue` the group name as SVG text, shared by both posters.
 - `src/components/FlipCard.vue` click-to-flip 3D card with a front and a back slot. Each poster flips to reveal itself as a post.
 - `src/components/InstagramPostMock.vue` mocked-up Instagram feed post; the post image comes in through its slot.
 - `src/components/DebugPanel.vue` theme switcher buttons in the header, dev only (`import.meta.env.DEV`).
@@ -51,7 +55,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 
 ## Design
 
-- **Fonts** (Google Fonts import in `main.css`): Google Sans Flex (`font-sans`, body), Russo One (`font-heading`), Nunito bold (`font-slot`, the reel words). Bitcount Grid Double is still imported but unused.
+- **Fonts** (Google Fonts import in `main.css`): Google Sans Flex (`font-sans`, body), Russo One (`font-heading`), Nunito bold (`font-slot`, the reel words).
 - **Themes:** pastel (default), eggshell, twilight (dark), curtain. Each theme sets the same role variables (`primary`, `on-primary`, `accent` for the prefix word, `highlight` for the main word, `muted`, `surface`, `on-surface`) from its palette colors. Components only use the role names as Tailwind colors, never raw hex. To add a theme: a block in `main.css` and an entry in `stores/theme.ts`.
 - **Dotted shadow:** halftone dot pattern behind the reel pills (`dotted-shadow` utility). It reserves its own space with padding so it never overflows its container.
 - Posters use theme colors through the same role classes (`fill-surface`, `fill-accent`, ...).
