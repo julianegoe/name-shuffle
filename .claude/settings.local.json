@@ -12,7 +12,8 @@
       "Bash(./node_modules/.bin/vite build *)",
       "Bash(echo \"build exit: $?\")",
       "Read(//Applications/Google Chrome.app/**)",
-      "Bash(pnpm add *)"
+      "Bash(pnpm add *)",
+      "Bash(pnpm run *)"
     ]
   }
 }

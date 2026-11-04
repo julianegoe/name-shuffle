@@ -6,6 +6,22 @@
   --font-heading: "Russo One", ui-sans-serif, system-ui, sans-serif;
   --font-slot: "Nunito", ui-rounded, ui-sans-serif, system-ui, sans-serif;
 
+  --animate-shake: shake 0.75s ease-in-out;
+  @keyframes shake {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    20%,
+    60% {
+      transform: rotate(-0.5deg);
+    }
+    40%,
+    80% {
+      transform: rotate(0.5deg);
+    }
+  }
+
   /* Each theme below sets these roles. */
   --color-primary: var(--primary);
   --color-on-primary: var(--on-primary);
