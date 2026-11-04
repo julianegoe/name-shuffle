@@ -33,6 +33,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 - `src/components/SlotReel.vue` one pill-shaped reel with its shuffle (die icon) button inside on the left and an on/off switch on the outline. Spin animation: fast, gradually slowing, slight bounce. Never lands on the word already shown. Respects reduced motion. Tuning constants are at the top of the file.
 - `src/components/TheaterPoster.vue` illustrated poster for "Die Gerechten" by Albert Camus (figure and bomb), group name prominent at the bottom right, play title small.
 - `src/components/TheaterPosterGeometric.vue` second poster: geometric tiles, the group name is the star, play only as a small line.
+- `src/components/ConnectorButton.vue` round accent toggle ball with a word in it ("und", "aber"). One connector at a time goes between the two words on the posters.
 - `src/components/FlipCard.vue` click-to-flip 3D card with a front and a back slot. Each poster flips to reveal itself as a post.
 - `src/components/InstagramPostMock.vue` mocked-up Instagram feed post; the post image comes in through its slot.
 - `src/components/DebugPanel.vue` theme switcher buttons in the header, dev only (`import.meta.env.DEV`).

@@ -13,7 +13,8 @@
       "Bash(echo \"build exit: $?\")",
       "Read(//Applications/Google Chrome.app/**)",
       "Bash(pnpm add *)",
-      "Bash(pnpm run *)"
+      "Bash(pnpm run *)",
+      "Bash(echo \"leftover refs: $?\")"
     ]
   }
 }

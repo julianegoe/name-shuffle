@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
+import ConnectorButton from "@/components/ConnectorButton.vue";
 import FlipCard from "@/components/FlipCard.vue";
 import HintArrow from "@/components/HintArrow.vue";
 import InstagramPostMock from "@/components/InstagramPostMock.vue";
@@ -31,7 +32,9 @@ const mainWordEnabled = ref(true);
 const bothEnabled = computed(
   () => prefixEnabled.value && mainWordEnabled.value,
 );
-const withUnd = ref(false); // puts "und" between the two words on the posters
+// A connector word goes between the two words on the posters. Only one at a time.
+const CONNECTORS = ["und", "aber"] as const;
+const connector = ref<(typeof CONNECTORS)[number] | "">("");
 
 const hasName = computed(
   () =>
@@ -41,7 +44,9 @@ const hasName = computed(
 // With one reel switched off, the remaining word takes the main spot on the posters.
 const posterPrefix = computed(() => {
   if (!bothEnabled.value) return "";
-  return withUnd.value && prefix.value ? `${prefix.value} und` : prefix.value;
+  return connector.value && prefix.value
+    ? `${prefix.value} ${connector.value}`
+    : prefix.value;
 });
 const posterMainWord = computed(() =>
   mainWordEnabled.value ? mainWord.value : prefix.value,
@@ -72,20 +77,7 @@ watch([posterPrefix, posterMainWord], () => {
 <template>
   <main class="grid grid-rows-[1fr_auto] gap-6 p-6">
     <div
-      class="relative grid w-full max-w-6xl gap-10 self-center justify-self-center pt-20 md:grid-cols-2">
-      <button
-        type="button"
-        class="absolute text-xl uppercase top-3 left-1/2 grid size-16 -translate-x-1/2 cursor-pointer place-items-center rounded-full border-2 bg-accent font-slot font-bold text-on-surface transition duration-300 ease-[cubic-bezier(0.34,1.8,0.64,1)] hover:scale-110 active:scale-95 disabled:cursor-default disabled:opacity-30 disabled:hover:scale-100 md:top-5"
-        :class="
-          withUnd && bothEnabled
-            ? 'border-on-surface shadow-md'
-            : 'border-accent opacity-50'
-        "
-        :aria-pressed="withUnd"
-        :disabled="!bothEnabled"
-        @click="withUnd = !withUnd">
-        und
-      </button>
+      class="relative grid w-full max-w-6xl gap-y-3 self-center justify-self-center pt-20 md:grid-cols-2 md:gap-x-10">
       <div class="relative">
         <!-- Shown until the first shuffle -->
         <div
@@ -104,6 +96,17 @@ watch([posterPrefix, posterMainWord], () => {
           name="Prefix"
           word-class="text-accent"
           @spin-start="cancelNudge" />
+      </div>
+      <!-- Between the reels when they are stacked, centered above them side by side -->
+      <div
+        class="flex justify-center gap-3 md:absolute md:top-5 md:left-1/2 md:-translate-x-1/2">
+        <ConnectorButton
+          v-for="word in CONNECTORS"
+          :key="word"
+          :label="word"
+          :active="connector === word && bothEnabled"
+          :disabled="!bothEnabled"
+          @click="connector = connector === word ? '' : word" />
       </div>
       <SlotReel
         v-model="mainWord"
