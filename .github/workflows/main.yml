@@ -1,16 +1,48 @@
 name: Build and Deploy Vue Application to Github Pages
+
 on:
   push:
-    branch: -main/master/{{name of the branch you want to trigger you action on}}
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
-  build_deploy_vue:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    name: Build and Deploy Vue
     steps:
-      - uses: actions/checkout@v2
-      - id: Build-Deploy-Vue
-        uses: thefrustrateddev/vue-deploy-github-pages@v1.0.0
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
-          username: "julianegoe"
-          reponame: "name-shuffle"
-          token: ${{ secrets.GITHUB_TOKEN }} # no need to change this line this is used to create the branch in your application repository
+          version: 12.16.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26.13.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Pages serves 404.html for unknown paths, so /admin and /favorites load the app on a reload.
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
