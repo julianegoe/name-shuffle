@@ -9,6 +9,8 @@ import SlotReel from "@/components/SlotReel.vue";
 import TheaterPoster from "@/components/TheaterPoster.vue";
 import TheaterPosterGeometric from "@/components/TheaterPosterGeometric.vue";
 import { useWordsStore } from "@/stores/words";
+import { bestPartners, blendName } from "@/utils/neologism";
+import { allParts, firstParts } from "@/utils/wordParts";
 
 const POSTERS = [
   { component: TheaterPoster, rotation: "-rotate-2", hint: "" },
@@ -41,16 +43,57 @@ const hasName = computed(
     (!prefixEnabled.value || prefix.value !== "") &&
     (!mainWordEnabled.value || mainWord.value !== ""),
 );
+
+// Chaos mode: the reels shuffle word parts, and the two parts form one new word.
+// The first reel takes the first part of each entry, the second reel any part.
+const chaos = ref(false);
+const takenNames = computed(
+  () =>
+    new Set(
+      [...words.prefixes, ...words.mainWords].flatMap((entry) =>
+        entry.toLowerCase().split(/\s+/),
+      ),
+    ),
+);
+// Once one reel has landed, the other only offers pieces that sound good with it.
+const reelPrefixes = computed(() => {
+  if (!chaos.value) return words.prefixes;
+  const pieces = firstParts(words.prefixes);
+  return mainWord.value && mainWordEnabled.value
+    ? bestPartners(mainWord.value, pieces, false, takenNames.value)
+    : pieces;
+});
+const reelMainWords = computed(() => {
+  if (!chaos.value) return words.mainWords;
+  const pieces = allParts(words.mainWords);
+  return prefix.value && prefixEnabled.value
+    ? bestPartners(prefix.value, pieces, true, takenNames.value)
+    : pieces;
+});
+const chaosName = computed(() => {
+  const first = prefixEnabled.value ? prefix.value : "";
+  const second = mainWordEnabled.value ? mainWord.value : "";
+  return first && second ? blendName(first, second) : first || second;
+});
+
+function toggleChaos() {
+  chaos.value = !chaos.value;
+  // Whole entries and parts don't mix, so both modes start empty
+  prefix.value = "";
+  mainWord.value = "";
+}
+
 // With one reel switched off, the remaining word takes the main spot on the posters.
 const posterPrefix = computed(() => {
-  if (!bothEnabled.value) return "";
+  if (chaos.value || !bothEnabled.value) return "";
   return connector.value && prefix.value
     ? `${prefix.value} ${connector.value}`
     : prefix.value;
 });
-const posterMainWord = computed(() =>
-  mainWordEnabled.value ? mainWord.value : prefix.value,
-);
+const posterMainWord = computed(() => {
+  if (chaos.value) return chaosName.value;
+  return mainWordEnabled.value ? mainWord.value : prefix.value;
+});
 
 // If nobody clicks a poster soon after a new name, the posters shake once as a hint.
 const NUDGE_DELAY_MS = 3000;
@@ -89,9 +132,10 @@ watch([posterPrefix, posterMainWord], () => {
           </span>
         </div>
         <SlotReel
+          :key="`prefix-${chaos}`"
           v-model="prefix"
           v-model:enabled="prefixEnabled"
-          :words="words.prefixes"
+          :words="reelPrefixes"
           :locked="!mainWordEnabled"
           name="Prefix"
           word-class="text-accent"
@@ -104,14 +148,19 @@ watch([posterPrefix, posterMainWord], () => {
           v-for="word in CONNECTORS"
           :key="word"
           :label="word"
-          :active="connector === word && bothEnabled"
-          :disabled="!bothEnabled"
+          :active="connector === word && bothEnabled && !chaos"
+          :disabled="!bothEnabled || chaos"
           @click="connector = connector === word ? '' : word" />
+        <ConnectorButton
+          label="😈 Chaos"
+          :active="chaos"
+          @click="toggleChaos" />
       </div>
       <SlotReel
+        :key="`main-${chaos}`"
         v-model="mainWord"
         v-model:enabled="mainWordEnabled"
-        :words="words.mainWords"
+        :words="reelMainWords"
         :locked="!prefixEnabled"
         name="Name"
         word-class="text-highlight"

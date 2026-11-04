@@ -68,6 +68,7 @@ async function spin() {
       { duration: DURATION_MS, fill: "forwards" },
     );
     await animation?.finished;
+    if (!strip.value) return; // the reel was replaced during the spin
     animation?.cancel();
     spinning.value = false;
   }

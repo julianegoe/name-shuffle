@@ -46,6 +46,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 
 - Posters appear once every enabled reel has a word.
 - Either reel can be switched off, but never both. The posters then show only the remaining word, in the main spot.
+- Chaos mode generates neologisms. The first reel shuffles the opening of each entry (Theater: Thea), the second reel any chunk (Resonanz: Reso, Nanz), both from `src/utils/wordParts.ts`, a rule-of-thumb syllable splitter that merges syllables up to at least 4 letters. `src/utils/neologism.ts` joins the two, smoothing shared letters and double vowels at the join (Konfron + Nanz: Konfronanz), and scores names by length, ending and consonant clusters. Once one reel has landed, the other only offers its 10 best-sounding partners.
 - Responsive: reels stack in one column on mobile, side by side from `md`.
 
 ## Design
