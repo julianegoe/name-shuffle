@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <button
     type="button"
-    class="grid shrink-0 cursor-pointer place-items-center rounded-full border-2 border-on-surface transition-colors hover:bg-on-surface hover:text-surface disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-inherit"
+    class="grid shrink-0 cursor-pointer place-items-center rounded-full border-2 border-on-surface transition-colors hover:bg-on-surface hover:text-surface disabled:cursor-default disabled:hover:bg-surface"
     :aria-label="label"
     :title="label">
     <svg

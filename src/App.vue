@@ -2,7 +2,6 @@
 import { RouterLink, RouterView } from "vue-router";
 import DebugPanel from "@/components/DebugPanel.vue";
 
-const showDebugPanel = import.meta.env.DEV;
 const NAV_LINKS = [
   { to: "/", label: "Name Shuffle" },
   { to: "/admin", label: "Wörter hinzufügen" },
@@ -24,7 +23,7 @@ const NAV_LINKS = [
           {{ link.label }}
         </RouterLink>
       </nav>
-      <div v-if="showDebugPanel" class="flex items-center gap-4">
+      <div class="flex items-center gap-4">
         <span class="hidden text-sm sm:inline">Theme:</span>
         <DebugPanel class="md:justify-end" />
       </div>

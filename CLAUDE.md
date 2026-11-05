@@ -42,7 +42,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 - `src/components/PosterName.vue` the group name as SVG text, shared by both posters.
 - `src/components/FlipCard.vue` click-to-flip 3D card with a front and a back slot. Each poster flips to reveal itself as a post.
 - `src/components/InstagramPostMock.vue` mocked-up Instagram feed post; the post image comes in through its slot.
-- `src/components/DebugPanel.vue` theme switcher buttons in the header, dev only (`import.meta.env.DEV`).
+- `src/components/DebugPanel.vue` theme switcher buttons in the header.
 - `src/stores/words.ts` the word lists (prefixes and main words): dummy defaults plus added words, saved in localStorage.
 - `src/utils/posterWord.ts` text sizing for the posters, including splitting a single word in two lines.
 - `src/stores/theme.ts` selected theme, saved in localStorage and set as `data-theme` on `<html>`.
@@ -58,7 +58,7 @@ A shuffle machine that generates a name for our theater group. The group is sear
 ## Design
 
 - **Fonts** (Google Fonts import in `main.css`): Google Sans Flex (`font-sans`, body), Russo One (`font-heading`), Nunito bold (`font-slot`, the reel words).
-- **Themes:** pastel (default), eggshell, twilight (dark), curtain. Each theme sets the same role variables (`primary`, `on-primary`, `accent` for the prefix word, `highlight` for the main word, `muted`, `surface`, `on-surface`) from its palette colors. The two accents are never the text color, so they stand out; both are also used on the posters. In Curtain, `highlight` and `primary` are both oxblood, because the palette has no other strong color. Components only use the role names as Tailwind colors, never raw hex. To add a theme: a block in `main.css` and an entry in `stores/theme.ts`.
+- **Themes:** eggshell (default, set in `stores/theme.ts` and on `<html>` in `index.html`), pastel, twilight (dark), curtain. Each theme sets the same role variables (`primary`, `on-primary`, `accent` for the prefix word, `highlight` for the main word, `muted`, `surface`, `on-surface`) from its palette colors. The two accents are never the text color, so they stand out; both are also used on the posters. In Curtain, `highlight` and `primary` are both oxblood, because the palette has no other strong color. Components only use the role names as Tailwind colors, never raw hex. To add a theme: a block in `main.css` and an entry in `stores/theme.ts`.
 - **Dotted shadow:** halftone dot pattern behind the reel pills (`dotted-shadow` utility). It reserves its own space with padding so it never overflows its container.
 - Posters use theme colors through the same role classes (`fill-surface`, `fill-accent`, ...).
 

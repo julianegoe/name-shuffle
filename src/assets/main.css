@@ -37,7 +37,6 @@
 }
 
 /* Themes: add one here and in stores/theme.ts */
-:root,
 [data-theme="pastel"] {
   --honey-bronze: #f6bd60;
   --linen: #f7ede2;

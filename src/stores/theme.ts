@@ -13,7 +13,7 @@ export const THEMES = [
 export type ThemeId = (typeof THEMES)[number]["id"];
 
 export const useThemeStore = defineStore("theme", () => {
-  const theme = useLocalStorage<ThemeId>("name-shuffle-theme", "pastel");
+  const theme = useLocalStorage<ThemeId>("name-shuffle-theme", "eggshell");
 
   watchEffect(() => {
     document.documentElement.dataset.theme = theme.value;
